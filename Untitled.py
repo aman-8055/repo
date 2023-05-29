@@ -1,20 +1,37 @@
+import streamlit as st
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
+from sumy.summarizers.lex_rank import LexRankSummarizer
 
-def summarize_text(text, num_sentences=3):
+def summarize_text(text, num_sentences):
+    # Create a parser and tokenizer
     parser = PlaintextParser.from_string(text, Tokenizer("english"))
-    summarizer = LsaSummarizer()
+    
+    # Create a LexRank summarizer
+    summarizer = LexRankSummarizer()
+    
+    # Summarize the text
     summary = summarizer(parser.document, num_sentences)
-
-    summary_text = ""
-    for sentence in summary:
-        summary_text += str(sentence) + " "
-
+    
+    # Join the summary sentences into a single string
+    summary_text = " ".join(str(sentence) for sentence in summary)
+    
     return summary_text
 
-# Example usage
-text = "Your text goes here. This is a sample text that you want to summarize. You can modify this text with your own content."
+def main():
+    st.title("Text Summarizer")
+    
+    # Get user input text
+    text = st.text_area("Enter the text to summarize:")
+    
+    # Get the number of sentences for the summary
+    num_sentences = st.slider("Select the number of sentences for the summary:", 1, 10, 3)
+    
+    # Summarize the text when the user clicks the button
+    if st.button("Summarize"):
+        summary = summarize_text(text, num_sentences)
+        st.subheader("Summary:")
+        st.write(summary)
 
-summary = summarize_text(text)
-print(summary)
+if __name__ == "__main__":
+    main()
