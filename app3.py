@@ -15,6 +15,9 @@ def summarize_text(text):
     summary_ids = model.generate(inputs['input_ids'], num_beams=4, max_length=100, early_stopping=True)
     summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
 
+    # Print the summary
+    print("Summary:", summary)
+
     return summary
 
 def main():
