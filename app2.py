@@ -1,17 +1,18 @@
 import streamlit as st
-from transformers import DistilBartTokenizer, DistilBartForConditionalGeneration
+import torch
+from transformers import BartTokenizer, BartForConditionalGeneration
 
 def summarize_text(text):
-    # Load the pre-trained DistilBART model
-    model = DistilBartForConditionalGeneration.from_pretrained('sshleifer/distilbart-cnn-12-6')
-    tokenizer = DistilBartTokenizer.from_pretrained('sshleifer/distilbart-cnn-12-6')
+    # Load the pre-trained BART model
+    model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+    tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
 
     # Tokenize the input text
-    inputs = tokenizer([text], truncation=True, padding='longest', return_tensors='pt')
+    inputs = tokenizer([text], truncation=True, max_length=1024, return_tensors='pt')
 
     # Generate the summary
     summary_ids = model.generate(inputs['input_ids'], num_beams=4, max_length=100, early_stopping=True)
-    summary = tokenizer.decode(summary_ids.squeeze(), skip_special_tokens=True)
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
 
     return summary
 
@@ -26,7 +27,6 @@ def main():
         summary = summarize_text(text)
         st.subheader("Summary:")
         st.write(summary)
-        print("Summary:", summary)  # Print the summary in the console
 
 if __name__ == "__main__":
     main()
