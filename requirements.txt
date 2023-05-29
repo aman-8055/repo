@@ -1,2 +1,3 @@
 sumy
 streamlit
+torch
