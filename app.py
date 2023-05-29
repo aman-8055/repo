@@ -1,7 +1,11 @@
 import streamlit as st
+import nltk
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
+
+def download_nltk_resources():
+    nltk.download("punkt")
 
 def summarize_text(text, num_sentences):
     # Create a parser and tokenizer
@@ -20,6 +24,9 @@ def summarize_text(text, num_sentences):
 
 def main():
     st.title("Text Summarizer")
+    
+    # Download the necessary NLTK resources
+    download_nltk_resources()
     
     # Get user input text
     text = st.text_area("Enter the text to summarize:")
