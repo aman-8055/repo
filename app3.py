@@ -2,6 +2,9 @@ import streamlit as st
 import torch
 from transformers import BartTokenizer, BartForConditionalGeneration
 
+# Disable usage statistics collection
+st.set_option("browser.gatherUsageStats", False)
+
 # Load the pre-trained BART model and tokenizer
 model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
 tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
