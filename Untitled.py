@@ -1,20 +1,12 @@
-pip install sumy
-
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
 
 def summarize_text(text, num_sentences=3):
-    # Initialize the parser with the text
     parser = PlaintextParser.from_string(text, Tokenizer("english"))
-
-    # Initialize the LSA Summarizer
     summarizer = LsaSummarizer()
-
-    # Summarize the text
     summary = summarizer(parser.document, num_sentences)
 
-    # Create the summary text
     summary_text = ""
     for sentence in summary:
         summary_text += str(sentence) + " "
