@@ -1,24 +1,19 @@
 import streamlit as st
-import torch
 from transformers import DistilBartTokenizer, DistilBartForConditionalGeneration
 
 def summarize_text(text):
-    try:
-        # Load the pre-trained DistilBART model
-        model = DistilBartForConditionalGeneration.from_pretrained('sshleifer/distilbart-cnn-12-6')
-        tokenizer = DistilBartTokenizer.from_pretrained('sshleifer/distilbart-cnn-12-6')
+    # Load the pre-trained DistilBART model
+    model = DistilBartForConditionalGeneration.from_pretrained('sshleifer/distilbart-cnn-12-6')
+    tokenizer = DistilBartTokenizer.from_pretrained('sshleifer/distilbart-cnn-12-6')
 
-        # Tokenize the input text
-        input_ids = tokenizer.encode(text, truncation=True, return_tensors='pt')
+    # Tokenize the input text
+    inputs = tokenizer([text], truncation=True, padding='longest', return_tensors='pt')
 
-        # Generate the summary
-        summary_ids = model.generate(input_ids, num_beams=4, max_length=100, early_stopping=True)
-        summary = tokenizer.decode(summary_ids.squeeze(), skip_special_tokens=True)
+    # Generate the summary
+    summary_ids = model.generate(inputs['input_ids'], num_beams=4, max_length=100, early_stopping=True)
+    summary = tokenizer.decode(summary_ids.squeeze(), skip_special_tokens=True)
 
-        return summary
-    except Exception as e:
-        st.error("An error occurred during text summarization. Please try again later.")
-        st.error(str(e))
+    return summary
 
 def main():
     st.title("Text Summarizer")
@@ -29,9 +24,9 @@ def main():
     # Summarize the text when the user clicks the button
     if st.button("Summarize"):
         summary = summarize_text(text)
-        if summary:
-            st.subheader("Summary:")
-            st.write(summary)
+        st.subheader("Summary:")
+        st.write(summary)
+        print("Summary:", summary)  # Print the summary in the console
 
 if __name__ == "__main__":
     main()
