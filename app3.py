@@ -2,15 +2,11 @@ import streamlit as st
 import torch
 from transformers import BartTokenizer, BartForConditionalGeneration
 
-# Disable usage statistics collection
-st.set_option("browser.gatherUsageStats", False)
-
-# Load the pre-trained BART model and tokenizer
-model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
-tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
-
-@st.cache
 def summarize_text(text):
+    # Load the pre-trained BART model
+    model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+    tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
+
     # Tokenize the input text
     inputs = tokenizer([text], truncation=True, max_length=1024, return_tensors='pt')
 
@@ -24,12 +20,10 @@ def main():
     st.title("Text Summarizer")
     
     # Get user input text
-    with st.form("text_form"):
-        text = st.text_area("Enter the text to summarize:")
-        submit_button = st.form_submit_button(label="Summarize")
+    text = st.text_area("Enter the text to summarize:")
     
-    # Summarize the text when the form is submitted
-    if submit_button:
+    # Summarize the text when the user clicks the button
+    if st.button("Summarize"):
         summary = summarize_text(text)
         st.subheader("Summary:")
         st.write(summary)
