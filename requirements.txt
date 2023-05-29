@@ -1,5 +1,2 @@
 sumy
 streamlit
-python -m nltk.downloader punkt
-pip install nltk
-
