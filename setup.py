@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'streamlit',
-        'torch+cpu',
+        'torch',
         'transformers'
     ],
     author='Your Name',
