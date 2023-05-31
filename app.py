@@ -1,32 +1,38 @@
 import streamlit as st
-import torch
-from transformers import BartTokenizer, BartForConditionalGeneration
+from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
 def summarize_text(text):
-    # Load the pre-trained BART model
-    model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
-    tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
-
+    # Load the Pegasus model and tokenizer
+    model_name = "google/pegasus-xsum"
+    model = PegasusForConditionalGeneration.from_pretrained(model_name)
+    tokenizer = PegasusTokenizer.from_pretrained(model_name)
+    
     # Tokenize the input text
-    inputs = tokenizer([text], truncation=True, max_length=1024, return_tensors='pt')
-
+    inputs = tokenizer.encode(text, truncation=True, max_length=512, return_tensors="pt")
+    
     # Generate the summary
-    summary_ids = model.generate(inputs['input_ids'], num_beams=4, max_length=100, early_stopping=True)
+    summary_ids = model.generate(inputs, max_length=150, num_beams=4, length_penalty=2.0, early_stopping=True)
+    
+    # Decode the summary tokens into text
     summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
+    
     return summary
 
+# Streamlit app
 def main():
-    st.title("Text Summarizer")
+    st.title("Paragraph Summarizer")
     
-    # Get user input text
-    text = st.text_area("Enter the text to summarize:")
+    # Text input
+    text = st.text_area("Enter the paragraph you want to summarize", height=200)
     
-    # Summarize the text when the user clicks the button
+    # Summarize button
     if st.button("Summarize"):
-        summary = summarize_text(text)
-        st.subheader("Summary:")
-        st.write(summary)
+        if text:
+            # Call the summarize_text function
+            summary = summarize_text(text)
+            st.success(summary)
+        else:
+            st.warning("Please enter a paragraph to summarize.")
 
 if __name__ == "__main__":
     main()
