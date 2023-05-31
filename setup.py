@@ -7,5 +7,7 @@ setup(
     install_requires=[
         'sumy',
         'streamlit',
+        'torch',
+        'transformers',
     ],
 )
