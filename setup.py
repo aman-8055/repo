@@ -5,7 +5,8 @@ setup(
     version='1.0.0',
     packages=find_packages(),
     install_requires=[
-        'streamlit,
+        'streamlit',
+        'torch==1.9.0+cpu',
         'transformers==4.11.3'
     ],
     author='Your Name',
