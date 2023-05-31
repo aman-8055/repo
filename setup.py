@@ -6,8 +6,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'streamlit',
-        'torch==1.9.0+cpu',
-        'transformers==4.11.3'
+        'torch+cpu',
+        'transformers'
     ],
     author='Your Name',
     description='Streamlit application for paragraph summarization using Pegasus',
